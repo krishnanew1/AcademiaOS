@@ -24,6 +24,7 @@ import StudentRegistration from './pages/StudentRegistration';
 import StudentAttendance from './pages/StudentAttendance';
 import StudentReports from './pages/StudentReports';
 import StudentFaculty from './pages/StudentFaculty';
+import DebugTimetable from './pages/DebugTimetable';
 import './App.css';
 
 function App() {
@@ -94,6 +95,7 @@ function App() {
             <Route path="faculty" element={<StudentFaculty />} />
             <Route path="grades" element={<StudentGrades />} />
             <Route path="reports" element={<StudentReports />} />
+            <Route path="debug-timetable" element={<DebugTimetable />} />
           </Route>
         </Routes>
       </div>
