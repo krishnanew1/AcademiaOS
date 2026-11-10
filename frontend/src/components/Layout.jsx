@@ -1,9 +1,17 @@
-import { Outlet, useNavigate, NavLink } from 'react-router-dom';
+import { Outlet, useNavigate, NavLink, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import { tokenUtils } from '../api';
 import './Layout.css';
 
 const Layout = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // Close the mobile menu whenever the route changes.
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
 
   // Get user role from localStorage
   const userRole = localStorage.getItem('user_role');
@@ -92,10 +100,33 @@ const Layout = () => {
       <header className="layout-header">
         <div className="header-content">
           <div className="header-left">
+            <button
+              className="menu-toggle-btn"
+              aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+              aria-expanded={menuOpen}
+              aria-controls="layout-sidebar-nav"
+              onClick={() => setMenuOpen((v) => !v)}
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                {menuOpen ? (
+                  <>
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                  </>
+                ) : (
+                  <>
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                  </>
+                )}
+              </svg>
+            </button>
             <h1 className="header-title">Academic ERP</h1>
             {userRole && (
               <span className="user-role-badge">
-                {userRole === 'ADMIN' ? '👑 Admin' : userRole === 'FACULTY' ? '👨‍🏫 Faculty' : '👨‍🎓 Student'}
+                {userRole === 'ADMIN' ? 'Admin' : userRole === 'FACULTY' ? 'Faculty' : 'Student'}
               </span>
             )}
           </div>
@@ -108,9 +139,17 @@ const Layout = () => {
       </header>
 
       <div className="layout-body">
+        {/* Backdrop for mobile menu */}
+        {menuOpen && (
+          <div
+            className="sidebar-backdrop"
+            onClick={() => setMenuOpen(false)}
+            aria-hidden="true"
+          />
+        )}
         {/* Sidebar Navigation */}
-        <aside className="layout-sidebar">
-          <nav className="sidebar-nav">
+        <aside className={`layout-sidebar${menuOpen ? ' open' : ''}`} id="layout-sidebar-nav">
+          <nav className="sidebar-nav" aria-label="Primary">
             <ul className="nav-list">
               {navigationItems.map((item) => (
                 <li key={item.path} className="nav-item">
@@ -118,6 +157,7 @@ const Layout = () => {
                     to={item.path}
                     end={item.isDashboard}
                     className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                    onClick={() => setMenuOpen(false)}
                   >
                     {item.label}
                   </NavLink>

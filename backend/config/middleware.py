@@ -145,3 +145,40 @@ class RequestLoggingMiddleware(MiddlewareMixin):
         """Log response status."""
         logger.debug(f"[RESPONSE] {request.path} | Status: {response.status_code}")
         return response
+
+
+class DemoReadOnlyMiddleware(MiddlewareMixin):
+    """
+    When DEMO_MODE is enabled, makes the whole API read-only for demo visitors.
+
+    Blocks every write method (POST/PUT/PATCH/DELETE) except the JWT auth
+    endpoints, so demo users can still log in with the seeded accounts but
+    cannot change any data, upload files, or create records.
+    """
+
+    WRITE_METHODS = ('POST', 'PUT', 'PATCH', 'DELETE')
+
+    # Auth endpoints stay open so visitors can log in to the demo.
+    # (JWT obtain/refresh perform no meaningful data mutation.)
+    ALLOWED_WRITE_PREFIXES = (
+        '/api/auth/login/',
+        '/api/auth/token/refresh/',
+    )
+
+    def process_request(self, request):
+        from django.conf import settings
+        from django.http import JsonResponse
+
+        if not getattr(settings, 'DEMO_MODE', False):
+            return None
+        if request.method not in self.WRITE_METHODS:
+            return None
+        if any(request.path.startswith(p) for p in self.ALLOWED_WRITE_PREFIXES):
+            return None
+        return JsonResponse(
+            {
+                'detail': 'This is a read-only demo deployment with synthetic '
+                          'data. Changes and uploads are disabled.'
+            },
+            status=403,
+        )

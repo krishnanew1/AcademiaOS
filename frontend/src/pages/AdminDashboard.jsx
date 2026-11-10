@@ -28,7 +28,7 @@ const AdminDashboard = () => {
         api.get('/api/academics/departments/'),
         api.get('/api/academics/courses/'),
         api.get('/api/users/students/'),
-        api.get('/api/faculty/')
+        api.get('/api/users/faculty/')
       ]);
 
       setStats({
@@ -92,7 +92,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="stat-card" onClick={() => navigate('/admin/students')}>
-          <div className="stat-icon">👨‍🎓</div>
+          <div className="stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
           <div className="stat-content">
             <h3 className="stat-number">{stats.students}</h3>
             <p className="stat-label">Students</p>
@@ -100,7 +100,7 @@ const AdminDashboard = () => {
         </div>
 
         <div className="stat-card" onClick={() => navigate('/admin/faculty')}>
-          <div className="stat-icon">👨‍🏫</div>
+          <div className="stat-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="12" rx="2"/><path d="M8 20h8"/><path d="M12 16v4"/></svg></div>
           <div className="stat-content">
             <h3 className="stat-number">{stats.faculty}</h3>
             <p className="stat-label">Faculty</p>

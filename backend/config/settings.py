@@ -26,6 +26,9 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
+# Read-only public demo mode: blocks all mutating API calls except JWT auth.
+DEMO_MODE = config('DEMO_MODE', default=False, cast=bool)
+
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=Csv())
 
 # Production Security Settings
@@ -67,6 +70,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',  # Must be at the top
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -75,6 +79,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'config.middleware.AuditLogMiddleware',
+    'config.middleware.DemoReadOnlyMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -113,8 +118,24 @@ MySQLdb.__version__ = '2.2.2'
 # 3. Database Configuration
 # Default to SQLite for local dev unless explicitly configured.
 DB_ENGINE = config('DB_ENGINE', default='django.db.backends.sqlite3')
+DATABASE_URL = config('DATABASE_URL', default='')
 
-if DB_ENGINE == 'django.db.backends.sqlite3':
+if DATABASE_URL:
+    # Single-URL config (e.g. Neon Postgres): postgres://user:pass@host/dbname
+    from urllib.parse import urlparse
+    _db = urlparse(DATABASE_URL)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': _db.path.lstrip('/'),
+            'USER': _db.username or '',
+            'PASSWORD': _db.password or '',
+            'HOST': _db.hostname or '',
+            'PORT': str(_db.port or 5432),
+            'OPTIONS': {'sslmode': 'require'},
+        }
+    }
+elif DB_ENGINE == 'django.db.backends.sqlite3':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',

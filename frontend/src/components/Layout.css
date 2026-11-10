@@ -19,9 +19,26 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: nowrap;
   padding: 0 24px;
   height: 64px;
   max-width: 100%;
+}
+
+.menu-toggle-btn {
+  display: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--text-inverse);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 6px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-backdrop {
+  display: none;
 }
 
 .header-left {
@@ -201,6 +218,21 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .menu-toggle-btn {
+    display: inline-flex;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 998;
+  }
+
   .layout-sidebar {
     position: fixed;
     left: -260px;
@@ -246,11 +278,20 @@
 
   .header-title {
     font-size: 16px;
+    white-space: nowrap;
+  }
+
+  .header-left {
+    gap: 8px;
+    min-width: 0;
+    overflow: hidden;
   }
 
   .logout-btn {
     padding: 6px 12px;
     font-size: 12px;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   .theme-toggle-btn {
@@ -297,4 +338,24 @@
 
 .layout-sidebar::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
+}
+/* Scope the app header away from page-level .header-content rules (Dashboard.css mobile column) */
+.layout-header .header-content {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  max-width: none;
+}
+
+.layout-header .header-right {
+  flex-shrink: 0;
+  width: auto;
+  padding-left: 0;
+  justify-content: flex-end;
+}
+
+.layout-header .header-left {
+  min-width: 0;
 }

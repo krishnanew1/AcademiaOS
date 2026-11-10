@@ -27,10 +27,23 @@ import StudentFaculty from './pages/StudentFaculty';
 import DebugTimetable from './pages/DebugTimetable';
 import './App.css';
 
+function DemoBanner() {
+  return (
+    <div style={{
+      width: '100%', boxSizing: 'border-box', zIndex: 9999,
+      background: '#b45309', color: '#fff', textAlign: 'center',
+      padding: '6px 12px', fontSize: '13px', fontWeight: 600,
+    }}>
+      Public read-only demo - synthetic data only. Do not enter real personal information.
+    </div>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
       <div className="App">
+        <DemoBanner />
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={<Login />} />

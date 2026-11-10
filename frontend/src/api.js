@@ -8,8 +8,13 @@ export const setGlobalToast = (toastFunction) => {
 };
 
 // Create axios instance with base configuration
+// Same-origin /api in production (Vercel rewrites route it to the backend),
+// local Django server during development. Override with VITE_API_URL.
+const API_BASE = import.meta.env.VITE_API_URL ||
+  (import.meta.env.DEV ? 'http://127.0.0.1:8000' : '');
+
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000',
+  baseURL: API_BASE,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -44,7 +49,7 @@ api.interceptors.response.use(
       const refreshToken = localStorage.getItem('refresh_token');
       if (refreshToken) {
         try {
-          const response = await axios.post('http://127.0.0.1:8000/api/auth/token/refresh/', {
+          const response = await axios.post(`${API_BASE}/api/auth/token/refresh/`, {
             refresh: refreshToken,
           });
 

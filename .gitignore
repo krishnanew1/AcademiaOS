@@ -141,3 +141,5 @@ FRONTEND_PHASES.md
 
 # Markdown files
 *.md
+.vercel
+.env*

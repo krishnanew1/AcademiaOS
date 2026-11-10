@@ -184,7 +184,7 @@ const StudentDashboard = () => {
       {/* Hero Section - Welcome Banner */}
       <div className="hero-section">
         <div className="hero-content">
-          <div className="hero-icon">👨‍🎓</div>
+          <div className="hero-icon"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.5 3 3 6 3s6-1.5 6-3v-5"/></svg></div>
           <div className="hero-text">
             <h1 className="hero-title">Welcome, {studentName}!</h1>
             <div className="hero-details">
