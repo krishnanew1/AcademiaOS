@@ -32,7 +32,7 @@ class AuditLogMiddleware(MiddlewareMixin):
     
     # Endpoints to exclude from auditing (to avoid noise)
     EXCLUDED_PATHS = [
-        '/admin/jsi18n/',  # Django admin i18n
+        '/api/admin/jsi18n/',  # Django admin i18n
         '/static/',         # Static files
         '/media/',          # Media files
     ]
