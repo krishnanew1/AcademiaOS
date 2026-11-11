@@ -25,12 +25,6 @@
       }
     },
     {
-      "source": "/admin/(.*)",
-      "destination": {
-        "service": "backend"
-      }
-    },
-    {
       "source": "/swagger/(.*)",
       "destination": {
         "service": "backend"
